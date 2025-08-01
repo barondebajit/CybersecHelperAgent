@@ -3,6 +3,7 @@ import json
 import os
 from datetime import datetime
 from pathlib import Path
+from google.genai import types
 
 class PIIScanner:
     def __init__(self):
@@ -376,3 +377,196 @@ class PIIScanner:
             return True
         except Exception as e:
             return False
+
+scanner = PIIScanner()
+
+def scan_text_for_pii(text, validate=True):
+    return scanner.scan_text(text, validate)
+
+def scan_file_for_pii(filepath, encoding='utf-8'):
+    return scanner.scan_file(filepath, encoding)
+
+def scan_directory_for_pii(directory_path, recursive=True, file_extensions=None):
+    return scanner.scan_directory(directory_path, recursive, file_extensions)
+
+def generate_pii_report(scan_results, output_format='json'):
+    return scanner.generate_report(scan_results, output_format)
+
+def save_pii_results(results, output_file, format='json'):
+    return scanner.save_results(results, output_file, format)
+
+def validate_ssn_number(ssn):
+    return scanner.validate_ssn(ssn)
+
+def validate_credit_card_number(number):
+    return scanner.validate_credit_card(number)
+
+def validate_aadhar_number(aadhar):
+    return scanner.validate_aadhar(aadhar)
+
+def validate_indian_phone_number(phone):
+    return scanner.validate_indian_phone(phone)
+
+scan_text_function = types.FunctionDeclaration(
+    name="scan_text_for_pii",
+    description="Scan text content for personally identifiable information (PII) including SSN, credit cards, emails, phone numbers, etc.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "text": types.Schema(
+                type=types.Type.STRING,
+                description="Text content to scan for PII"
+            ),
+            "validate": types.Schema(
+                type=types.Type.BOOLEAN,
+                description="Whether to validate found PII using algorithm checks (default: True)"
+            )
+        },
+        required=["text"]
+    )
+)
+
+scan_file_function = types.FunctionDeclaration(
+    name="scan_file_for_pii",
+    description="Scan a file for PII content with detailed analysis and statistics",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "filepath": types.Schema(
+                type=types.Type.STRING,
+                description="Path to the file to scan for PII"
+            ),
+            "encoding": types.Schema(
+                type=types.Type.STRING,
+                description="File encoding (default: utf-8)"
+            )
+        },
+        required=["filepath"]
+    )
+)
+
+scan_directory_function = types.FunctionDeclaration(
+    name="scan_directory_for_pii",
+    description="Scan an entire directory for PII across multiple files",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "directory_path": types.Schema(
+                type=types.Type.STRING,
+                description="Path to the directory to scan"
+            ),
+            "recursive": types.Schema(
+                type=types.Type.BOOLEAN,
+                description="Whether to scan subdirectories recursively (default: True)"
+            ),
+            "file_extensions": types.Schema(
+                type=types.Type.ARRAY,
+                items=types.Schema(type=types.Type.STRING),
+                description="List of file extensions to scan (default: common text file types)"
+            )
+        },
+        required=["directory_path"]
+    )
+)
+
+generate_report_function = types.FunctionDeclaration(
+    name="generate_pii_report",
+    description="Generate a formatted report from PII scan results",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "scan_results": types.Schema(
+                type=types.Type.OBJECT,
+                description="Scan results dictionary from previous PII scan"
+            ),
+            "output_format": types.Schema(
+                type=types.Type.STRING,
+                description="Report format: 'json' or 'summary' (default: json)"
+            )
+        },
+        required=["scan_results"]
+    )
+)
+
+save_results_function = types.FunctionDeclaration(
+    name="save_pii_results",
+    description="Save PII scan results to a file",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "results": types.Schema(
+                type=types.Type.OBJECT,
+                description="Scan results to save"
+            ),
+            "output_file": types.Schema(
+                type=types.Type.STRING,
+                description="Path where to save the results file"
+            ),
+            "format": types.Schema(
+                type=types.Type.STRING,
+                description="Output format: 'json' or 'summary' (default: json)"
+            )
+        },
+        required=["results", "output_file"]
+    )
+)
+
+validate_ssn_function = types.FunctionDeclaration(
+    name="validate_ssn_number",
+    description="Validate if a Social Security Number is properly formatted and not in known invalid patterns",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "ssn": types.Schema(
+                type=types.Type.STRING,
+                description="Social Security Number to validate"
+            )
+        },
+        required=["ssn"]
+    )
+)
+
+validate_credit_card_function = types.FunctionDeclaration(
+    name="validate_credit_card_number",
+    description="Validate credit card number using Luhn algorithm",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "number": types.Schema(
+                type=types.Type.STRING,
+                description="Credit card number to validate"
+            )
+        },
+        required=["number"]
+    )
+)
+
+validate_aadhar_function = types.FunctionDeclaration(
+    name="validate_aadhar_number",
+    description="Validate Indian Aadhar number format and basic checks",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "aadhar": types.Schema(
+                type=types.Type.STRING,
+                description="Aadhar number to validate"
+            )
+        },
+        required=["aadhar"]
+    )
+)
+
+validate_phone_function = types.FunctionDeclaration(
+    name="validate_indian_phone_number",
+    description="Validate Indian phone number format and basic checks",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "phone": types.Schema(
+                type=types.Type.STRING,
+                description="Indian phone number to validate"
+            )
+        },
+        required=["phone"]
+    )
+)
