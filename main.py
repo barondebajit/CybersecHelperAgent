@@ -1,5 +1,6 @@
 import os
 import dotenv
+from colorama import Fore, Style
 from google import genai
 from google.genai import types
 
@@ -112,11 +113,12 @@ def chat_with_agent(user_message):
     
     if response.candidates[0].content.parts[0].function_call:
         function_call = response.candidates[0].content.parts[0].function_call
-        print(f"Function to call: {function_call.name}")
-        print(f"Arguments: {function_call.args}")
         
+        print(Fore.YELLOW+f"\nFunction to call: {function_call.name}"+Fore.RESET)
+        print(Fore.LIGHTBLUE_EX+f"Arguments: {function_call.args}"+Fore.RESET)
+
         result = handle_function_call(function_call)
-        print(f"Function completed")
+        print(Fore.GREEN+f"Function completed"+Fore.RESET)
         
         function_response_part = types.Part(
             function_response=types.FunctionResponse(
@@ -136,20 +138,19 @@ def chat_with_agent(user_message):
             contents=conversation,
             config=config
         )
-        
-        print(f"\nFinal response: {follow_up.text}")
+        print(Fore.MAGENTA+f"\nFinal response: {follow_up.text}"+Fore.RESET)
         return follow_up.text
     else:
-        print(f"Direct response: {response.text}")
+        print(Fore.GREEN+f"Direct response: {response.text}"+Fore.RESET)
         return response.text
 
 if __name__ == "__main__":
-    print("Multi-Tool Security Agent Ready!")
+    print(Fore.CYAN+"Multi-Tool Security Agent Ready!")
     print("\nDNS Functions: dns_lookup, reverse_dns_lookup, blacklist_check")
     print("File Metadata Functions: extract_file_metadata, extract_multiple_files_metadata, calculate_file_hashes, get_file_basic_info, detect_file_type_signature")
     print("Network Scanner Functions: scan_target_ports, scan_single_port, scan_port_range, scan_common_ports, resolve_target_hostname, detect_target_os")
     print("PII Scanner Functions: scan_text_for_pii, scan_file_for_pii, scan_directory_for_pii, generate_pii_report, save_pii_results")
-    print("Validation Functions: validate_ssn_number, validate_credit_card_number, validate_aadhar_number, validate_indian_phone_number")
+    print("Validation Functions: validate_ssn_number, validate_credit_card_number, validate_aadhar_number, validate_indian_phone_number"+Fore.RESET)
     
     while True:
         user_input = input("\nEnter your query (or 'quit' to exit): ")

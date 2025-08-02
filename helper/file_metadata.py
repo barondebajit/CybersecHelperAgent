@@ -172,14 +172,13 @@ class MetadataExtractor:
 
     def extract_text_metadata(self, filepath):
         try:
-            with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+            with open(filepath, 'r', errors='ignore') as f:
                 content = f.read()
-                
+
             lines = content.split('\n')
             words = content.split()
             
             return {
-                'encoding': 'utf-8',
                 'line_count': len(lines),
                 'word_count': len(words),
                 'character_count': len(content),
